@@ -1,0 +1,11 @@
+https://github.com/IvanFed3/homework - вивантаження ДЗ
+
+https://github.com/IvanFed3/3.3.1.3-flask-blog - форкнув інший проект і клонував собі на комп'ютер
+
+вніс зміни та створив request
+https://github.com/MLH-Fellowship/3.3.1.3-flask-blog/pull/29
+
+на віддаленому комп'ютері helium створив папку homework та додав туди свої роботи
+
+
+
