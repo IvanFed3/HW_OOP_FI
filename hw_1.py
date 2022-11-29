@@ -10,7 +10,7 @@ class Product:
 
 class ShoppingCart:
     list = []
-    def add(self, name, price, quantity) -> None:
+    def add(self, name: str, price: float, quantity: int) -> None:
         self.list.append([name, price, quantity])
 
     def get_total (self) -> None:
