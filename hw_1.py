@@ -1,20 +1,21 @@
 class Product:
-    def __init__(self, name: str, price: float, quantity: int) -> None:
+    def __init__(self, name: str, price: float) -> None:
         self.name = name
         self.price = price
-        self.quantity = quantity
 
-    def get_total(self) -> None:
-        print(f'{self.name} {self.price*self.quantity}')
+    def get_total(self, quantity) -> float:
+        return self.price*quantity
 
 
 class ShoppingCart:
     list = []
-    def add(self, name: str, price: float, quantity: int) -> None:
-        self.list.append([name, price, quantity])
 
-    def get_total (self) -> None:
+    def add(self, product, quantity: int = 1) -> None:
+        self.list.append([product.name, quantity, product.price])
+
+    def get_total(self) -> float:
         sum_1 = 0
         for i in self.list:
             sum_1 += i[1]*i[2]
-        print(sum_1)
+        return sum_1
+    
