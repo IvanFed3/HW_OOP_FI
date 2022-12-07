@@ -1,40 +1,36 @@
 class Product:
-    def __init__(self, name: str, price: float) -> None:
+    def __init__(self, name: str, price: float, unit: float = 1) -> None:
         self.name = name
         self.price = price
+        self.unit = unit
 
     def __repr__(self) -> str:
-        return self.name
-
-    def __str__(self) -> str:
         return self.name
 
     def __float__(self) -> float:
         return self.price
 
-    def __eq__(self, other) -> bool:
-        if isinstance(other, Product):
-            return self.name == other.name and self.price == other.price
-        return False
-
     def __add__(self, other):
-        cart_new = ShoppingCart()
-        if self.__eq__(other):
-            pass
+        if self.name == other.name and self.price == other.price:
+            self.unit += other.unit
+            return self
         else:
+            cart_new = ShoppingCart()
             cart_new.add_product(self)
             cart_new.add_product(other)
-        return cart_new
+            return cart_new
 
-    def get_total(self, quantity) -> float:
+    def get_total(self, quantity: float = None) -> float:
+        if quantity is None:
+            quantity = self.unit
         return round(self.price * quantity, 2)
 
 
 class ShoppingCart:
 
     def __init__(self):
-        self.list_product = []
-        self.list_quantity = []
+        self.products: list[Product] = []
+        self.quantities: list[Product] = []
 
     def __repr__(self) -> str:
         return "Корзина"
@@ -42,41 +38,37 @@ class ShoppingCart:
     def __float__(self) -> float:
         return self.get_total()
 
-    def add_product(self, product_name, quantity: float = 1) -> None:
-        if len(self.list_product) == 0:
-            self.list_product.append(product_name)
-            self.list_quantity.append(quantity)
+    def add_product(self, product, quantity: float = None) -> None:
+        if quantity is None:
+            quantity = product.unit
+        for i in self.products:
+            id_product = self.products.index(i)
+            if product == self.products[id_product]:
+                self.quantities[id_product] += quantity
+                break
         else:
-            for i in range(len(self.list_product)):
-                if product_name.__eq__(self.list_product[i]):
-                    self.list_quantity[i] += quantity
-                    break
-                elif i != len(self.list_product) - 1:
-                    continue
-                else:
-                    self.list_product.append(product_name)
-                    self.list_quantity.append(quantity)
-                    break
+            self.products.append(product)
+            self.quantities.append(quantity)
 
     def __add__(self, other):
-        new_cart = ShoppingCart()
-        new_cart.list_product = self.list_product[:]
-        new_cart.list_quantity = self.list_quantity[:]
-        for i in range(len(new_cart.list_product)):
-            for j in range(len(other.list_product)):
-                if other.list_product[j].__eq__(new_cart.list_product[i]):
-                    new_cart.list_quantity[i] += other.list_quantity[j]
-                    break
-                elif j != len(new_cart.list_product) - 1:
-                    continue
+        if isinstance(other, ShoppingCart):
+            new_cart = ShoppingCart()
+            new_cart.products = self.products[:]
+            new_cart.quantities = self.quantities[:]
+            for product_1, product_2 in zip(self.products, other.products):
+                id_product_1 = self.products.index(product_1)
+                id_product_2 = other.products.index(product_2)
+                if product_2 == product_1:
+                    new_cart.quantities[id_product_1] += other.quantities[id_product_2]
                 else:
-                    new_cart.list_product.append(other.list_product[j])
-                    new_cart.list_quantity.append(other.list_quantity[j])
-                    break
-        return new_cart
+                    new_cart.products.append(other.products[id_product_2])
+                    new_cart.quantities.append(other.quantities[id_product_2])
+            return new_cart
+        else:
+            self.add_product(other)
 
     def get_total(self) -> float:
         sum_cart = 0
-        for product, quantity in zip(self.list_product, self.list_quantity):
+        for product, quantity in zip(self.products, self.quantities):
             sum_cart += product.get_total(quantity)
         return round(sum_cart, 2)
