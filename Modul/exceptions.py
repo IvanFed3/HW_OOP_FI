@@ -1,0 +1,3 @@
+#
+# class MyExeption (Exception):
+#
