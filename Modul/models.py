@@ -1,5 +1,6 @@
 import random
 import settings
+<<<<<<< HEAD
 
 
 initial_player_health = settings.INITIAL_PLAYER_HEALTH
@@ -30,16 +31,45 @@ class Enemy:
 
     def select_defence(self):
         return heroes.index(random.choice(heroes))
+=======
+import exceptions
+
+
+class Enemy:
+    def __init__(self, level, score=0):
+        self.level = level
+        self.health = self.level
+        self.score = score
+
+    def new_level(self):
+        level = self.level + 1
+        print("Ви ПЕРЕМОГЛИ!")
+        print(f"РАУНД {level}")
+        self.score += settings.SCORE_FOR_WIN
+        new_enemy = Enemy(level, self.score)
+        return new_enemy
+
+    def descrease_health(self):
+        self.health -= 1
+
+    def action(self):
+        return random.choice(settings.VALID_CHOICES)
+>>>>>>> c94ddcfe4a6340125cf13fa0510b77193e97e000
 
 
 class Player:
     def __init__(self, name: str):
         self.name = name
+<<<<<<< HEAD
         self.health = initial_player_health
+=======
+        self.health = settings.INITIAL_PLAYER_HEALTH
+>>>>>>> c94ddcfe4a6340125cf13fa0510b77193e97e000
         self.score = 0
 
     def descrease_health(self):
         self.health -= 1
+<<<<<<< HEAD
 
     def select_attack(self):
         attack = 0
@@ -77,11 +107,52 @@ class Player:
             print('Нажаль ПРОВАЛ!')
             return result_fight
         elif result_fight == result[2]:
+=======
+        try:
+            if self.health < 1:
+                raise exceptions.GameOver
+        except exceptions.GameOver:
+            print('GAME OVER.')
+
+    def action(self, side):
+        action = 0
+        while action not in map(str, settings.VALID_CHOICES):
+            action = input(f'Виберіть героя для {side} ВОЇН -1, ГРАБІЖНИК -2, ЧАКЛУН -3 : ')
+        return settings.VALID_CHOICES[int(action)]
+
+    def fight(self, attack, defence):
+        if attack == settings.WARRIOR and defence == settings.ROBBER:
+            return settings.WIN
+        elif attack == settings.ROBBER and defence == settings.WIZARD:
+            return settings.WIN
+        elif attack == settings.WIZARD and defence == settings.WARRIOR:
+            return settings.WIN
+        elif attack == defence:
+            return settings.DRAW
+        else:
+            return settings.LOSE
+
+    def attack(self, enemy):
+        print("АТАКУЙ")
+        attack = self.action('атаки')
+        defence = enemy.action()
+        result_fight = self.fight(attack, defence)
+        if result_fight == settings.WIN:
+            print('Твоя атака УСПІШНА!')
+            enemy.descrease_health()
+            self.score += settings.SCORE_FOR_LOCAL_WIN
+            return result_fight
+        elif result_fight == settings.LOSE:
+            print('Нажаль ПРОВАЛ!')
+            return result_fight
+        elif result_fight == settings.DRAW:
+>>>>>>> c94ddcfe4a6340125cf13fa0510b77193e97e000
             print('НІЧИЯ!')
             return result_fight
 
     def defence(self, enemy):
         print("ЗАХИЩАЙСЯ")
+<<<<<<< HEAD
         result_fight = self.fight(self.select_defence(), enemy.select_attack())
         if result_fight == result[0]:
             print('Захист УСПІШНИЙ!')
@@ -91,5 +162,18 @@ class Player:
             self.descrease_health()
             return result_fight
         elif result_fight == result[2]:
+=======
+        attack = self.action('захисту')
+        defence = enemy.action()
+        result_fight = self.fight(attack, defence)
+        if result_fight == settings.WIN:
+            print('Захист УСПІШНИЙ!')
+            return result_fight
+        elif result_fight == settings.LOSE:
+            print('Нажаль ПРОВАЛ!')
+            self.descrease_health()
+            return result_fight
+        elif result_fight == settings.DRAW:
+>>>>>>> c94ddcfe4a6340125cf13fa0510b77193e97e000
             print('НІЧИЯ!')
             return result_fight
