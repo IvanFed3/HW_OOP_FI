@@ -76,18 +76,3 @@ class ShoppingCart:
         for product, quantity in zip(self.products, self.quantities):
             sum_cart += product.get_total(quantity)
         return round(sum_cart, 2)
-
-apple = Product('apple', 10)
-apple_1 = Product('apple', 10, 8)
-lemon = Product('lemon', 8, 2)
-banana = Product('banana', 112, 4)
-cherry = Product('cherry',156)
-Cart_1 = ShoppingCart()
-Cart_1.add_product(lemon)
-Cart_1.add_product(apple)
-Cart_1.add_product(cherry)
-Cart_2 = apple_1 + banana
-Cart_2 += apple
-Cart_3 = Cart_2 + Cart_1
-
-print(Cart_3.products, Cart_3.quantities)
