@@ -15,17 +15,20 @@ def play():
     gamer_name = get_player_name()
     gamer = models.Player(gamer_name)
     boss = models.Enemy(settings.BOSS_LEVEL)
-    while gamer.health > 0:
-        gamer.attack(boss)
+    while True:
         try:
-            if boss.health < 1:
-                raise exceptions.EnemyDown
-        except exceptions.EnemyDown:
-            boss = boss.new_level()
             gamer.attack(boss)
-        gamer.defence(boss)
-    print(f'{gamer.name}, ти набрав {boss.score + gamer.score} балів.')
-    print('До зустрічі!')
+            gamer.defence(boss)
+        except exceptions.EnemyDown:
+            boss = models.Enemy(boss.level + 1)
+            print("Ви ПЕРЕМОГЛИ!")
+            print(f"РАУНД {boss.level}")
+            gamer.score += settings.SCORE_FOR_WIN
+        except exceptions.GameOver:
+            print('GAME OVER.')
+            print(f'{gamer.name}, ти набрав {gamer.score} балів.')
+            print('До зустрічі!')
+            break
 
 
 try:

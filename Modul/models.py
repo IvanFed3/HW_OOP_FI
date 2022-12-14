@@ -9,18 +9,13 @@ class Enemy:
         self.health = self.level
         self.score = score
 
-    def new_level(self):
-        level = self.level + 1
-        print("Ви ПЕРЕМОГЛИ!")
-        print(f"РАУНД {level}")
-        self.score += settings.SCORE_FOR_WIN
-        new_enemy = Enemy(level, self.score)
-        return new_enemy
-
     def descrease_health(self):
         self.health -= 1
+        if self.health < 1:
+            raise exceptions.EnemyDown
 
-    def action(self):
+    @staticmethod
+    def action():
         return random.choice(settings.VALID_CHOICES)
 
 
@@ -32,19 +27,18 @@ class Player:
 
     def descrease_health(self):
         self.health -= 1
-        try:
-            if self.health < 1:
-                raise exceptions.GameOver
-        except exceptions.GameOver:
-            print('GAME OVER.')
+        if self.health < 1:
+            raise exceptions.GameOver
 
-    def action(self, side):
+    @staticmethod
+    def action(side):
         action = 0
         while action not in map(str, settings.VALID_CHOICES):
             action = input(f'Виберіть героя для {side} ВОЇН -1, ГРАБІЖНИК -2, ЧАКЛУН -3 : ')
         return settings.VALID_CHOICES[int(action)]
 
-    def fight(self, attack, defence):
+    @staticmethod
+    def fight(attack, defence):
         if attack == settings.WARRIOR and defence == settings.ROBBER:
             return settings.WIN
         elif attack == settings.ROBBER and defence == settings.WIZARD:
